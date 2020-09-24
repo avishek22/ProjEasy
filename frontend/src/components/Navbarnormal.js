@@ -16,22 +16,9 @@ const Navbar = () => {
     materialize.Modal.init(leadlogin.current);
     materialize.Modal.init(resourcelogin.current);
   });
-  const [show, handleShow] = useState("transparent");
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) {
-        handleShow("black");
-      } else {
-        handleShow("transparent");
-      }
-      return () => {
-        window.removeEventListener("scroll");
-      };
-    });
-  }, []);
   return (
-    <nav style={{ backgroundColor: show, position: "fixed" }}>
-      <div className="nav-wrapper transparent darken-3">
+    <nav>
+      <div className="nav-wrapper grey darken-3">
         <Link to="/" className="brand-logo left" style={{ paddingLeft: "1%" }}>
           <img
             src="http://res.cloudinary.com/avishek/image/upload/v1600947404/jeatgirktjfmksehgnlb.png"
@@ -41,7 +28,7 @@ const Navbar = () => {
 
         <ul
           className="right
-         "
+           "
         >
           <li>
             <Link to="/aboutus">About Us</Link>

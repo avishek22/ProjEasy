@@ -7,7 +7,11 @@ import Navbar from "./components/Navbar";
 import Signuplead from "./components/screens/Signuplead";
 import Signupresource from "./components/screens/Signupresource";
 import ManagerLogin from "./components/screens/ManagerLogin";
-
+import Managernavbar from "./components/Managernavbar";
+import Aboutus from "./components/screens/Aboutus";
+import Landing from "./components/screens/Landing";
+import Footer from "./components/screens/Footer";
+import Navbarnormal from "./components/Navbarnormal";
 export const UserContext = createContext();
 
 const Routing = () => {
@@ -25,6 +29,13 @@ const Routing = () => {
     <Switch>
       <Route exact path="/">
         <Navbar></Navbar>
+        <Landing></Landing>
+        <Footer></Footer>
+      </Route>
+      <Route exact path="/aboutus">
+        <Navbarnormal></Navbarnormal>
+        <Aboutus></Aboutus>
+        <Footer></Footer>
       </Route>
       <Route exact path="/leadsignup">
         <Signuplead></Signuplead>
@@ -34,6 +45,9 @@ const Routing = () => {
       </Route>
       <Route exact path="/managerlogin">
         <ManagerLogin></ManagerLogin>
+      </Route>
+      <Route exact path="/manager">
+        <Managernavbar></Managernavbar>
       </Route>
     </Switch>
   );

@@ -12,27 +12,19 @@ import materialize from "materialize-css";
 const Navbar = () => {
   const leadlogin = useRef(null);
   const resourcelogin = useRef(null);
+  const history = useHistory();
   useEffect(() => {
     materialize.Modal.init(leadlogin.current);
     materialize.Modal.init(resourcelogin.current);
   });
-  const [show, handleShow] = useState("transparent");
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 100) {
-        handleShow("black");
-      } else {
-        handleShow("transparent");
-      }
-      return () => {
-        window.removeEventListener("scroll");
-      };
-    });
-  }, []);
   return (
-    <nav style={{ backgroundColor: show, position: "fixed" }}>
-      <div className="nav-wrapper transparent darken-3">
-        <Link to="/" className="brand-logo left" style={{ paddingLeft: "1%" }}>
+    <nav>
+      <div className="nav-wrapper grey darken-3">
+        <Link
+          to="/manager"
+          className="brand-logo left"
+          style={{ paddingLeft: "1%" }}
+        >
           <img
             src="http://res.cloudinary.com/avishek/image/upload/v1600947404/jeatgirktjfmksehgnlb.png"
             style={{ height: "6%", width: "6%" }}
@@ -41,31 +33,34 @@ const Navbar = () => {
 
         <ul
           className="right
-         "
+           "
         >
           <li>
-            <Link to="/aboutus">About Us</Link>
+            <Link>New Project</Link>
           </li>
           <li>
-            <Link to="/contact">Contact Us</Link>
+            <Link>All Teams</Link>
           </li>
-          <li>
+          {
             <Link
-              className="waves-effect waves-light  modal-trigger"
-              data-target="modal1"
+              className="waves-effect waves-light red btn "
+              //   data-target="modal1"
+              onClick={() => {
+                localStorage.clear();
+                //   dispatch({ type: "CLEAR" });
+                history.push("/");
+                //   materialize.Modal.getInstance(navs.current).close();
+              }}
             >
-              Login as Lead
+              Logout
             </Link>
-          </li>
-          <li>
-            {" "}
-            <Link
-              className="waves-effect waves-light  modal-trigger"
+            /*<Link
+              className="waves-effect waves-light btn modal-trigger"
               data-target="modal2"
             >
               Login as Resource
-            </Link>
-          </li>
+            </Link> */
+          }
         </ul>
       </div>
       <div id="modal1" className="modal profile " ref={leadlogin}>
