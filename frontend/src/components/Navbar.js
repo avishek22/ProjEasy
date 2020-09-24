@@ -18,13 +18,13 @@ const Navbar = () => {
   });
   return (
     <nav>
-      <div class="nav-wrapper grey darken-3">
+      <div className="nav-wrapper grey darken-3">
         <Link to="/" className="brand-logo left" style={{ paddingLeft: "1%" }}>
           Code Fellas
         </Link>
 
         <ul
-          class="right
+          className="right
          "
         >
           <li>
@@ -34,26 +34,21 @@ const Navbar = () => {
             <Link to="/contact">Contact Us</Link>
           </li>
           <Link
-            class="waves-effect waves-light btn modal-trigger"
+            className="waves-effect waves-light btn modal-trigger"
             data-target="modal1"
           >
             Login as Lead
           </Link>
           <Link
-            class="waves-effect waves-light btn modal-trigger"
+            className="waves-effect waves-light btn modal-trigger"
             data-target="modal2"
           >
             Login as Resource
           </Link>
         </ul>
       </div>
-      <div
-        id="modal1"
-        className="modal profile "
-        style={{ width: "30%" }}
-        ref={leadlogin}
-      >
-        <div className="modal-content">
+      <div id="modal1" className="modal profile " ref={leadlogin}>
+        <div className="modal-content" style={{ padding: "10% 30%" }}>
           <h4 style={{ textAlign: "center", color: "black" }}>Lead Login</h4>
           <input
             type="text"
@@ -89,13 +84,8 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-      <div
-        id="modal2"
-        className="modal profile "
-        ref={resourcelogin}
-        style={{ width: "30%" }}
-      >
-        <div className="modal-content">
+      <div id="modal2" className="modal profile " ref={resourcelogin}>
+        <div className="modal-content" style={{ padding: "10% 30%" }}>
           {" "}
           <h4 style={{ textAlign: "center", color: "black" }}>
             Resource Login

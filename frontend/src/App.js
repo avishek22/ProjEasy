@@ -13,16 +13,14 @@ export const UserContext = createContext();
 const Routing = () => {
   const history = useHistory();
   const { state, dispatch } = useContext(UserContext);
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  //   if (user) {
-  //     dispatch({ type: "USER", payload: user });
-  //     // history.push("/home");
-  //   } else {
-  //     history.push("/login");
-  //   }
-  // }, []);
+    if (user) {
+      dispatch({ type: "USER", payload: user });
+      // history.push("/home");
+    }
+  }, []);
   return (
     <Switch>
       <Route exact path="/">

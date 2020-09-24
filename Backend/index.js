@@ -19,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/", require("./routers/auth"));
+app.use("/", require("./routers/project"));
 
 app.listen(PORT, (e) => {
   if (!e) {
