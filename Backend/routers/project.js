@@ -13,7 +13,7 @@ const loginresource = require("../middleware/Loginresource");
 
 router.post("/newproject", Loginadmin, (req, res) => {
   const { Title, Leader } = req.body;
-  if (!Title || !Leader) {
+  if (Title === "" || Leader === "") {
     return res.status(422).json({ error: "Please add all the fields!" });
   }
 
@@ -84,6 +84,20 @@ router.get("/allproject", Loginadmin, (req, res) => {
       //   res.json({ posts: "No projects" });
       // } else {
       res.json({ project });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+router.get("/alllead", Loginadmin, (req, res) => {
+  Lead.find()
+
+    .then((lead) => {
+      // if (project.length === 0) {
+      //   res.json({ posts: "No projects" });
+      // } else {
+      res.json({ lead });
     })
     .catch((err) => {
       console.log(err);

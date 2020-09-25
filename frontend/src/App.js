@@ -12,6 +12,7 @@ import Aboutus from "./components/screens/Aboutus";
 import Landing from "./components/screens/Landing";
 import Footer from "./components/screens/Footer";
 import Navbarnormal from "./components/Navbarnormal";
+import Managerdashboard from "./components/screens/Managerdashboard";
 export const UserContext = createContext();
 
 const Routing = () => {
@@ -48,6 +49,7 @@ const Routing = () => {
       </Route>
       <Route exact path="/manager">
         <Managernavbar></Managernavbar>
+        <Managerdashboard></Managerdashboard>
       </Route>
     </Switch>
   );

@@ -30,7 +30,7 @@ const Navbar = () => {
     });
   }, []);
   return (
-    <nav style={{ backgroundColor: show, position: "fixed" }}>
+    <nav style={{ backgroundColor: show, position: "fixed", zIndex: 1 }}>
       <div className="nav-wrapper transparent darken-3">
         <Link to="/" className="brand-logo left" style={{ paddingLeft: "1%" }}>
           <img

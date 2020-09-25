@@ -6,7 +6,7 @@ import { UserContext } from "../../App";
 const Footer = () => {
   return (
     <section>
-      <footer class="page-footer" style={{ backgroundColor: "#4f504f" }}>
+      <footer class="page-footer" style={{ backgroundColor: "black" }}>
         <div class="container">
           <div class="row">
             <div class="col l6 s12">

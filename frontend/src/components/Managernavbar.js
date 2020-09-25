@@ -8,15 +8,67 @@ import React, {
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../App";
 import materialize from "materialize-css";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
-  const leadlogin = useRef(null);
+  const newproject = useRef(null);
   const resourcelogin = useRef(null);
   const history = useHistory();
+  const [title, setTitle] = useState("");
+  const [leader, setLeader] = useState("");
+
+  const [data, setData] = useState([]);
+  const { state, dispatch } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    materialize.Modal.init(leadlogin.current);
+    materialize.Modal.init(newproject.current);
     materialize.Modal.init(resourcelogin.current);
-  });
+    fetch("http://localhost:4000/alllead", {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+
+        setData(result.lead);
+        setLoading(true);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+  const newProject = (id) => {
+    fetch("http://localhost:4000/newproject", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        Title: title,
+        Leader: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        if (result.error) {
+          return Swal.fire("Error!", result.error, "error");
+        }
+        Swal.fire("Posted!", "Project Posted", "success");
+        setLoading(true);
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <nav>
       <div className="nav-wrapper grey darken-3">
@@ -36,7 +88,9 @@ const Navbar = () => {
            "
         >
           <li>
-            <Link>New Project</Link>
+            <Link className="modal-trigger" data-target="modal3">
+              New Project
+            </Link>
           </li>
           <li>
             <Link>All Teams</Link>
@@ -63,84 +117,63 @@ const Navbar = () => {
           }
         </ul>
       </div>
-      <div id="modal1" className="modal profile " ref={leadlogin}>
+      <div id="modal3" className="modal profile " ref={newproject}>
         <div className="modal-content" style={{ padding: "10% 30%" }}>
-          <h4 style={{ textAlign: "center", color: "black" }}>Lead Login</h4>
+          <h4 style={{ textAlign: "center", color: "black" }}>New Project</h4>
+
           <input
             type="text"
-            placeholder="E-mail"
+            placeholder="Title"
             style={{
               border: "1px solid gray",
               borderRadius: 2,
 
               backgroundColor: "#F9F9F9",
             }}
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
           ></input>
-          <input
-            type="password"
-            placeholder="Password"
+          <label>Leader</label>
+          <select
             style={{
               border: "1px solid gray",
               borderRadius: 2,
-
+              display: "block",
               backgroundColor: "#F9F9F9",
             }}
-          ></input>
+            value={leader}
+            onChange={(e) => {
+              e.preventDefault();
+              console.log(e.target.value);
+              //materialize.Modal.getInstance(newproject.current).open();
+              setLeader(e.target.value);
+            }}
+          >
+            <option disabled value="">
+              Choose one
+            </option>
+            {data.map((item) => {
+              return (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
           <button
             style={{ marginBottom: 10 }}
             className="btn waves-effect waves-light btn-block login "
-          >
-            Login
-          </button>
-          <h7 style={{ color: "black", marginLeft: "25%" }}>
-            Don't have an account?
-          </h7>
-          <Link to="/leadsignup" style={{ color: "black", marginLeft: "1%" }}>
-            Signup
-          </Link>
-        </div>
-      </div>
-      <div id="modal2" className="modal profile " ref={resourcelogin}>
-        <div className="modal-content" style={{ padding: "10% 30%" }}>
-          {" "}
-          <h4 style={{ textAlign: "center", color: "black" }}>
-            Resource Login
-          </h4>
-          <input
-            type="text"
-            placeholder="E-mail"
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
-
-              backgroundColor: "#F9F9F9",
+            onClick={() => {
+              newProject(leader);
+              materialize.Modal.getInstance(newproject.current).close();
+              setTitle("");
+              setLeader("");
             }}
-          ></input>
-          <input
-            type="password"
-            placeholder="Password"
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
-
-              backgroundColor: "#F9F9F9",
-            }}
-          ></input>
-          <button
-            style={{ marginBottom: 10 }}
-            className="btn waves-effect waves-light btn-block login "
           >
-            Login
+            Post
           </button>
-          <h7 style={{ color: "black", marginLeft: "25%" }}>
-            Don't have an account?
-          </h7>
-          <Link
-            to="/resourcesignup"
-            style={{ color: "black", marginLeft: "1%" }}
-          >
-            Signup
-          </Link>
         </div>
       </div>
     </nav>
