@@ -80,9 +80,6 @@ router.get("/allproject", Loginadmin, (req, res) => {
 
     .sort("-createdAt")
     .then((project) => {
-      // if (project.length === 0) {
-      //   res.json({ posts: "No projects" });
-      // } else {
       res.json({ project });
     })
     .catch((err) => {
@@ -94,9 +91,6 @@ router.get("/alllead", Loginadmin, (req, res) => {
   Lead.find()
 
     .then((lead) => {
-      // if (project.length === 0) {
-      //   res.json({ posts: "No projects" });
-      // } else {
       res.json({ lead });
     })
     .catch((err) => {

@@ -14,6 +14,7 @@ const projectSchema = new mongoose.Schema(
       type: String,
       default: "On Progress",
     },
+    Subtask: [{ type: mongoose.Schema.Types.ObjectID, ref: "Subtask" }],
   },
   { timestamps: true }
 );
