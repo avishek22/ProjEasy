@@ -8,11 +8,13 @@ import Signuplead from "./components/screens/Signuplead";
 import Signupresource from "./components/screens/Signupresource";
 import ManagerLogin from "./components/screens/ManagerLogin";
 import Managernavbar from "./components/Managernavbar";
+import Leadnavbar from "./components/Leadnavbar";
 import Aboutus from "./components/screens/Aboutus";
 import Landing from "./components/screens/Landing";
 import Footer from "./components/screens/Footer";
 import Navbarnormal from "./components/Navbarnormal";
 import Managerdashboard from "./components/screens/Managerdashboard";
+import Leaddashboard from "./components/screens/Leaddashboard";
 export const UserContext = createContext();
 
 const Routing = () => {
@@ -50,6 +52,10 @@ const Routing = () => {
       <Route exact path="/manager">
         <Managernavbar></Managernavbar>
         <Managerdashboard></Managerdashboard>
+      </Route>
+      <Route exact path="/lead">
+        <Leadnavbar></Leadnavbar>
+        <Leaddashboard></Leaddashboard>
       </Route>
     </Switch>
   );

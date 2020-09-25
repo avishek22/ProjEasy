@@ -55,6 +55,7 @@ const Navbar = () => {
             localStorage.setItem("email", JSON.stringify(data.Lead.email));
             dispatch({ type: "USER", payload: data.Lead });
             localStorage.setItem("_id", data.Lead._id);
+            localStorage.setItem("name", data.Lead.name);
             // console.log(state.email);
             history.push("/lead");
           }
