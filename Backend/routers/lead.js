@@ -22,11 +22,11 @@ router.post("/newsubtask", Loginlead, (req, res) => {
 
   console.log(req.lead);
 
-  const subtask = new Subtask({
+  const subtask1 = new Subtask({
     subtask,
     team,
   });
-  subtask
+  subtask1
     .save()
     .then((result) => {
       result;

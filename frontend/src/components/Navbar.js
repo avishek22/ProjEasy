@@ -8,16 +8,20 @@ import React, {
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../App";
 import materialize from "materialize-css";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const leadlogin = useRef(null);
   const resourcelogin = useRef(null);
+  const { state, dispatch } = useContext(UserContext);
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [show, handleShow] = useState("transparent");
   useEffect(() => {
     materialize.Modal.init(leadlogin.current);
     materialize.Modal.init(resourcelogin.current);
-  });
-  const [show, handleShow] = useState("transparent");
-  useEffect(() => {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
         handleShow("black");
@@ -29,6 +33,37 @@ const Navbar = () => {
       };
     });
   }, []);
+  const postDatalead = () => {
+    fetch("http://localhost:4000/loginlead", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password,
+        email,
+      }),
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          if (data.error) {
+            Swal.fire("Error", `${data.error}`, "error");
+          } else {
+            localStorage.setItem("jwt", data.token);
+            localStorage.setItem("user", JSON.stringify(data.Lead));
+            localStorage.setItem("email", JSON.stringify(data.Lead.email));
+            dispatch({ type: "USER", payload: data.Lead });
+            localStorage.setItem("_id", data.Lead._id);
+            // console.log(state.email);
+            history.push("/lead");
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <nav style={{ backgroundColor: show, position: "fixed", zIndex: 1 }}>
       <div className="nav-wrapper transparent darken-3">
@@ -80,6 +115,11 @@ const Navbar = () => {
 
               backgroundColor: "#F9F9F9",
             }}
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              console.log(e.target.value);
+            }}
           ></input>
           <input
             type="password"
@@ -90,10 +130,18 @@ const Navbar = () => {
 
               backgroundColor: "#F9F9F9",
             }}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              console.log(e.target.value);
+            }}
           ></input>
           <button
             style={{ marginBottom: 10 }}
             className="btn waves-effect waves-light btn-block login "
+            onClick={() => {
+              postDatalead();
+            }}
           >
             Login
           </button>

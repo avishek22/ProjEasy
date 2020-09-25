@@ -138,49 +138,41 @@ const Home = () => {
             <div
               className="likes card home-card input-field navfix"
               style={{
-                margin: "5%",
-
-                display: "flex",
-                flexWrap: "wrap",
+                padding: "5% 2% 2% 2%",
+                display: "inline-block",
+                margin: "2%",
+                width: "345px",
+                height: "500px",
               }}
             >
-              <div
+              <Link
                 style={{
                   display: "flex",
-
+                  flexDirection: "column",
                   flexWrap: "wrap",
+                  margin: "0%",
                 }}
                 key={item._id}
               >
-                <Link
-                  style={{
-                    display: "flex",
-
-                    margin: "3%",
-                  }}
-                >
-                  <div>
-                    <h2>{item.Title}</h2>
-                  </div>
-                  <h2
-                    style={{
-                      marginTop: "9%",
-                      marginLeft: "25%",
-                    }}
-                  >
+                <div style={{ marginRight: "2%" }}>
+                  <label>Project Name</label>
+                  <h2 style={{ marginTop: "0", marginRight: "2%" }}>
+                    {item.Title}
+                  </h2>
+                </div>
+                <div>
+                  <label>Leader</label>
+                  <h2 style={{ marginTop: "0" }}>
                     <strong>{item.Leader.name}</strong>
                   </h2>
-                  <p
-                    style={{
-                      marginTop: "9%",
-                      marginLeft: "25%",
-                      fontSize: "25px",
-                    }}
-                  >
+                </div>
+                <div>
+                  <label>Status</label>
+                  <p>
                     <strong>{item.Status}</strong>
                   </p>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
           );
         })}

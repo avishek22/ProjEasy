@@ -84,7 +84,7 @@ router.put("/removeteammember", Loginlead, (req, res) => {
 //     });
 // });
 
-router.get("/allteam", Login, (req, res) => {
+router.get("/allteam", Loginlead, (req, res) => {
   Team.find()
 
     .populate("members")
@@ -98,7 +98,7 @@ router.get("/allteam", Login, (req, res) => {
     });
 });
 
-router.get("/particularteam", Login, (req, res) => {
+router.get("/particularteam", Loginlead, (req, res) => {
   Team.findById(req.body.teamid)
 
     .populate("members")
