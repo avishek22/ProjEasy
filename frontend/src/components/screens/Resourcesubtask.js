@@ -63,7 +63,7 @@ const Home = () => {
         if (result.error) {
           return Swal.fire("Error!", result.error, "error");
         }
-        Swal.fire("Posted!", "Subtask Posted", "success");
+        Swal.fire("Posted!", "Project Status Updated", "success");
         // setLoading(true);
         // localStorage.setItem("newteam", result.team._id);
         // localStorage.setItem("newteamname", result.team.teamname);

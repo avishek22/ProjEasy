@@ -73,7 +73,7 @@ router.put("/editprojectstatus", Loginlead, (req, res) => {
 });
 
 router.put("/editsubtaskstatus", Loginresource, (req, res) => {
-  console.log(req.admin);
+  console.log(req.resource);
 
   Project.findOneAndUpdate(
     { "Subtask._id": req.body.projectid },
