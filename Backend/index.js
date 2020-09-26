@@ -22,6 +22,7 @@ app.use("/", require("./routers/auth"));
 app.use("/", require("./routers/project"));
 app.use("/", require("./routers/lead"));
 app.use("/", require("./routers/team"));
+app.use("/", require("./routers/resource"));
 
 app.listen(PORT, (e) => {
   if (!e) {

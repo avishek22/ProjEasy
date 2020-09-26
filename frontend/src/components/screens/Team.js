@@ -6,34 +6,18 @@ import Swal from "sweetalert2";
 
 const Home = () => {
   const [data, setData] = useState([]);
-  const [datalead, setDataLead] = useState([]);
   const { state, dispatch } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
-  const editmainproject = useRef();
-  const [title, setTitle] = useState("");
-  const [leader, setLeader] = useState("");
-  const click = () => {
-    fetch("http://localhost:4000/alllead", {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-
-        setDataLead(result.lead);
-        setLoading(true);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  const [loading, setLoading] = useState(true);
+  const [nomembers, setNomembers] = useState(0);
+  const newteam = useRef(null);
+  const edittteamname = useRef(null);
+  const [teamname, setTeamname] = useState("");
+  const [editteamname, setEditTeamname] = useState("");
+  const history = useHistory();
   useEffect(() => {
-    materialize.Modal.init(editmainproject.current);
-    fetch("http://localhost:4000/allproject", {
+    materialize.Modal.init(newteam.current);
+    materialize.Modal.init(edittteamname.current);
+    fetch("http://localhost:4000/allteam", {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +28,9 @@ const Home = () => {
       .then((result) => {
         console.log(result);
 
-        setData(result.project);
+        setData(result.team);
+        console.log(result.team.teamname);
+        //setNomembers(result.team.members.length);
         setLoading(true);
       })
       .catch((e) => {
@@ -52,17 +38,15 @@ const Home = () => {
       });
   }, []);
 
-  const newProject = (id) => {
-    fetch("http://localhost:4000/editproject", {
-      method: "put",
+  const newTeam = () => {
+    fetch("http://localhost:4000/newteam", {
+      method: "post",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
       body: JSON.stringify({
-        title,
-        leader: id,
-        projectid: localStorage.getItem("editmainprojectid"),
+        teamname: teamname,
       }),
     })
       .then((res) => res.json())
@@ -71,8 +55,36 @@ const Home = () => {
         if (result.error) {
           return Swal.fire("Error!", result.error, "error");
         }
-        Swal.fire("Posted!", "Project Posted", "success");
-        setLoading(true);
+        Swal.fire("Added!", "Add Members", "success");
+        // setLoading(true);
+        localStorage.setItem("newteam", result.team._id);
+        localStorage.setItem("newteamname", result.team.teamname);
+        //window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const editTeam = () => {
+    console.log(editteamname);
+    fetch("http://localhost:4000/editteamname", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        teamname: editteamname,
+        teamid: localStorage.getItem("editteamid"),
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        if (result.error) {
+          return Swal.fire("Error!", result.error, "error");
+        }
         window.location.reload();
       })
       .catch((e) => {
@@ -80,15 +92,16 @@ const Home = () => {
       });
   };
 
-  const delProject = () => {
-    fetch("http://localhost:4000/deleteproject", {
+  const deleteTeam = (id) => {
+    console.log(id);
+    fetch("http://localhost:4000/deleteteam", {
       method: "delete",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
       body: JSON.stringify({
-        projectid: localStorage.getItem("editmainprojectid"),
+        teamid: id,
       }),
     })
       .then((res) => res.json())
@@ -97,8 +110,9 @@ const Home = () => {
         if (result.error) {
           return Swal.fire("Error!", result.error, "error");
         }
-        Swal.fire("Posted!", "Project Posted", "success");
-        setLoading(true);
+        //Swal.fire("Posted!", "Project Posted", "success");
+        // setLoading(true);
+
         window.location.reload();
       })
       .catch((e) => {
@@ -108,6 +122,13 @@ const Home = () => {
 
   return (
     <div>
+      <button
+        style={{ margin: "2%" }}
+        className="btn waves-effect waves-light  modal-trigger"
+        data-target="modal4"
+      >
+        Add team
+      </button>
       {loading ? (
         ""
       ) : (
@@ -174,22 +195,17 @@ const Home = () => {
                 display: "inline-block",
                 margin: "2%",
                 width: "345px",
-                height: "500px",
+                height: "300px",
               }}
             >
               <div style={{ display: "flex", float: "right" }}>
                 <i
                   className="material-icons  modal-trigger"
-                  data-target="modal10"
+                  data-target="modal7"
                   style={{ margin: "5%", cursor: "pointer" }}
                   onClick={() => {
-                    localStorage.setItem("editmainprojectid", item._id);
-                    localStorage.setItem(
-                      "editmainprojectteamname",
-                      item.teamname
-                    );
-                    localStorage.setItem("editmainprojectname", item.name);
-                    click();
+                    localStorage.setItem("editteamid", item._id);
+                    localStorage.setItem("editteamname", item.teamname);
                   }}
                 >
                   edit
@@ -198,13 +214,7 @@ const Home = () => {
                   className="material-icons"
                   style={{ margin: "5%", cursor: "pointer" }}
                   onClick={() => {
-                    localStorage.setItem("editmainprojectid", item._id);
-                    localStorage.setItem(
-                      "editmainprojectteamname",
-                      item.teamname
-                    );
-                    localStorage.setItem("editmainprojectname", item.name);
-                    delProject();
+                    deleteTeam(item._id);
                   }}
                 >
                   delete
@@ -219,83 +229,85 @@ const Home = () => {
                 }}
                 key={item._id}
                 onClick={() => {
-                  localStorage.setItem("project", item._id);
+                  localStorage.setItem("selectteamid", item._id);
                 }}
-                to="/manager/subtask"
+                to="/lead/allteammembers"
               >
                 <div style={{ marginRight: "2%" }}>
-                  <label>Project Name</label>
+                  <label>Team Name</label>
                   <h2 style={{ marginTop: "0", marginRight: "2%" }}>
-                    {item.Title}
+                    {item.teamname}
                   </h2>
                 </div>
-                <div>
-                  <label>Leader</label>
+                {/* <div>
+                  <label>Number of members</label>
                   <h2 style={{ marginTop: "0" }}>
-                    <strong>{item.Leader.name}</strong>
+                    <strong>{nomembers}</strong>
                   </h2>
-                </div>
-                <div>
-                  <label>Status</label>
-                  <p>
-                    <strong>{item.Status}</strong>
-                  </p>
-                </div>
+                </div> */}
               </Link>
             </div>
           );
         })}
       </div>
-      <div id="modal10" className="modal profile " ref={editmainproject}>
+      <div id="modal4" className="modal profile " ref={newteam}>
         <div className="modal-content" style={{ padding: "10% 30%" }}>
-          <h4 style={{ textAlign: "center", color: "black" }}>New Project</h4>
+          <h4 style={{ textAlign: "center", color: "black" }}>New Team</h4>
 
-          {/* <input
+          <input
             type="text"
-            placeholder="Title"
+            placeholder="Team Name"
             style={{
               border: "1px solid gray",
               borderRadius: 2,
 
               backgroundColor: "#F9F9F9",
             }}
-            value={title}
+            value={teamname}
             onChange={(e) => {
-              setTitle(e.target.value);
+              setTeamname(e.target.value);
             }}
-          ></input> */}
-          <label>Leader</label>
-          <select
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
-              display: "block",
-              backgroundColor: "#F9F9F9",
-            }}
-            value={leader}
-            onChange={(e) => {
-              e.preventDefault();
-              console.log(e.target.value);
-              //materialize.Modal.getInstance(newproject.current).open();
-              setLeader(e.target.value);
-            }}
-          >
-            <option disabled value="">
-              Choose one
-            </option>
-            {datalead.map((item) => {
-              return (
-                <option key={item._id} value={item._id}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
+          ></input>
+
           <button
             style={{ marginBottom: 10 }}
             className="btn waves-effect waves-light btn-block login "
             onClick={() => {
-              newProject(leader);
+              newTeam();
+              materialize.Modal.getInstance(newteam.current).close();
+              history.push("/lead/addmembers");
+              //   setTitle("");
+              //   setLeader("");
+            }}
+          >
+            Post
+          </button>
+        </div>
+      </div>
+      <div id="modal7" className="modal profile " ref={edittteamname}>
+        <div className="modal-content" style={{ padding: "10% 30%" }}>
+          <h4 style={{ textAlign: "center", color: "black" }}>Edit Team</h4>
+
+          <input
+            type="text"
+            placeholder="Team Name"
+            style={{
+              border: "1px solid gray",
+              borderRadius: 2,
+
+              backgroundColor: "#F9F9F9",
+            }}
+            value={editteamname}
+            onChange={(e) => {
+              setEditTeamname(e.target.value);
+            }}
+          ></input>
+
+          <button
+            style={{ marginBottom: 10 }}
+            className="btn waves-effect waves-light btn-block login "
+            onClick={() => {
+              editTeam();
             }}
           >
             Post

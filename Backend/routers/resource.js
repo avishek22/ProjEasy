@@ -12,7 +12,8 @@ const Loginadmin = require("../middleware/Loginadmin");
 const loginresource = require("../middleware/Loginresource");
 const Loginlead = require("../middleware/Loginlead");
 const Team = require("../models/team");
-const Subtask = require("../models/subtask");
+
+const Loginresource = require("../middleware/Loginresource");
 
 router.put("/newsubtask", Loginlead, (req, res) => {
   const stask = {
@@ -42,6 +43,48 @@ router.put("/newsubtask", Loginlead, (req, res) => {
     });
 });
 
+router.get("/myteams", Loginresource, (req, res) => {
+  console.log(req.resource);
+
+  Team.find({ members: req.resource })
+    // .populate("Subtask._id")
+    .then((result) => {
+      res.json({ teams: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+router.post("/mysubtask", Loginresource, (req, res) => {
+  console.log(req.resource);
+
+  Project.find({ "Subtask.team": req.body.myteam })
+    .populate("Subtask.team")
+    .select("Subtask ")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    });
+});
+
+// router.post("/allsubtask", Loginlead, (req, res) => {
+//   Project.findById(req.body.projectid)
+
+//     .populate("Subtask.team")
+//     .select("Subtask")
+//     .exec((err, result) => {
+//       if (err) {
+//         return res.status(422).json({ error: err });
+//       } else {
+//         res.json(result);
+//       }
+//     });
+// });
+
 router.get("/allsubtask", Loginlead, (req, res) => {
   console.log(req.lead);
 
@@ -66,58 +109,6 @@ router.post("/allsubtask", Loginlead, (req, res) => {
       } else {
         res.json(result);
       }
-    });
-});
-
-router.post("/adminallsubtask", Loginadmin, (req, res) => {
-  Project.findById(req.body.projectid)
-
-    .populate("Subtask.team")
-    .select("Subtask")
-    .exec((err, result) => {
-      if (err) {
-        return res.status(422).json({ error: err });
-      } else {
-        res.json(result);
-      }
-    });
-});
-
-router.put("/editsubtask", Loginlead, (req, res) => {
-  console.log(req.lead);
-
-  Project.findOneAndUpdate(
-    { "Subtask._id": req.body.editsubtaskid },
-    {
-      $set: { team: req.body.team },
-      $set: { title: req.body.title },
-    }
-  )
-    .populate("Leader")
-    .then((result) => {
-      res.json({ project: result });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-router.delete("/deleteproject", Loginadmin, (req, res) => {
-  Project.findOne({ _id: req.body.projectid })
-    .populate("Leader")
-    .exec((err, project) => {
-      if (err || !project) {
-        return res.status(422).json({ error: err });
-      }
-
-      project
-        .remove()
-        .then((result) => {
-          res.json(result);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
     });
 });
 

@@ -7,12 +7,15 @@ import Swal from "sweetalert2";
 const Home = () => {
   const [data, setData] = useState([]);
   const { state, dispatch } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
-  const [editstatus, setEditStatus] = useState("");
-  const editstatusmodal = useRef();
+  const [loading, setLoading] = useState(true);
+  const [nomembers, setNomembers] = useState(0);
+  const newteam = useRef(null);
+  const edittteamname = useRef(null);
+  const [teamname, setTeamname] = useState("");
+  const [editteamname, setEditTeamname] = useState("");
+  const history = useHistory();
   useEffect(() => {
-    materialize.Modal.init(editstatusmodal.current);
-    fetch("http://localhost:4000/showleadproject", {
+    fetch("http://localhost:4000/adminallteam", {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +26,9 @@ const Home = () => {
       .then((result) => {
         console.log(result);
 
-        setData(result.project);
+        setData(result.team);
+        console.log(result.team.teamname);
+        //setNomembers(result.team.members.length);
         setLoading(true);
       })
       .catch((e) => {
@@ -31,40 +36,8 @@ const Home = () => {
       });
   }, []);
 
-  const editstatusmain = () => {
-    fetch("http://localhost:4000/editprojectstatus", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        projectid: localStorage.getItem("editprojectid"),
-        status: editstatus,
-      }),
-    })
-      .then((res) => {
-        res.json().then((data) => {
-          console.log(data);
-          if (data.error) {
-            Swal.fire("Error", `${data.error}`, "error");
-          } else {
-            window.location.reload();
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   return (
     <div>
-      <div>
-        <p style={{ margin: "2%" }}>
-          Welcome, Lead {localStorage.getItem("name")}
-        </p>
-      </div>
       {loading ? (
         ""
       ) : (
@@ -131,19 +104,9 @@ const Home = () => {
                 display: "inline-block",
                 margin: "2%",
                 width: "345px",
-                height: "500px",
+                height: "300px",
               }}
             >
-              <i
-                className="material-icons  modal-trigger"
-                data-target="modal8"
-                style={{ margin: "5%", cursor: "pointer", float: "right" }}
-                onClick={() => {
-                  localStorage.setItem("editprojectid", item._id);
-                }}
-              >
-                edit
-              </i>
               <Link
                 style={{
                   display: "flex",
@@ -152,72 +115,27 @@ const Home = () => {
                   margin: "0%",
                 }}
                 key={item._id}
-                to="/lead/subtask"
                 onClick={() => {
-                  localStorage.setItem("project", item._id);
+                  localStorage.setItem("selectteamid", item._id);
                 }}
+                to="/manager/teammember"
               >
                 <div style={{ marginRight: "2%" }}>
-                  <label>Project Name</label>
+                  <label>Team Name</label>
                   <h2 style={{ marginTop: "0", marginRight: "2%" }}>
-                    {item.Title}
+                    {item.teamname}
                   </h2>
                 </div>
-                <div>
-                  <label>Leader</label>
+                {/* <div>
+                  <label>Number of members</label>
                   <h2 style={{ marginTop: "0" }}>
-                    <strong>{item.Leader.name}</strong>
+                    <strong>{nomembers}</strong>
                   </h2>
-                </div>
-                <div>
-                  <label>Status</label>
-                  <p>
-                    <strong>{item.Status}</strong>
-                  </p>
-                </div>
+                </div> */}
               </Link>
             </div>
           );
         })}
-      </div>
-      <div id="modal8" className="modal profile " ref={editstatusmodal}>
-        <div className="modal-content" style={{ padding: "10% 30%" }}>
-          <h4 style={{ textAlign: "center", color: "black" }}>Add Member</h4>
-
-          <label>Member</label>
-          <select
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
-              display: "block",
-              backgroundColor: "#F9F9F9",
-            }}
-            value={editstatus}
-            onChange={(e) => {
-              e.preventDefault();
-              console.log(e.target.value);
-              //materialize.Modal.getInstance(newproject.current).open();
-              setEditStatus(e.target.value);
-            }}
-          >
-            <option disabled value="">
-              Choose one
-            </option>
-
-            <option value="Completed">Completed</option>
-            <option value="On progress">On Progress</option>
-            <option value="Backlog">Backlog</option>
-          </select>
-          <button
-            style={{ marginBottom: 10 }}
-            className="btn waves-effect waves-light btn-block login "
-            onClick={() => {
-              editstatusmain();
-            }}
-          >
-            Post
-          </button>
-        </div>
       </div>
     </div>
   );

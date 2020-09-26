@@ -14,7 +14,18 @@ const projectSchema = new mongoose.Schema(
       type: String,
       default: "On Progress",
     },
-    Subtask: [{ type: mongoose.Schema.Types.ObjectID, ref: "Subtask" }],
+
+    Subtask: [
+      {
+        title: String,
+        team: { type: mongoose.Schema.Types.ObjectID, ref: "Team" },
+        status: {
+          type: String,
+          default: "On Progress",
+        },
+        // timestamps:true
+      },
+    ],
   },
   { timestamps: true }
 );

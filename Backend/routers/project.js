@@ -10,6 +10,7 @@ const { JWT_SECRET } = require("../keys");
 const Loginadmin = require("../middleware/Loginadmin");
 const loginlead = require("../middleware/Loginlead");
 const loginresource = require("../middleware/Loginresource");
+const Loginlead = require("../middleware/Loginlead");
 
 router.post("/newproject", Loginadmin, (req, res) => {
   const { Title, Leader } = req.body;
@@ -43,7 +44,23 @@ router.put("/editproject", Loginadmin, (req, res) => {
   console.log(req.admin);
 
   Project.findByIdAndUpdate(req.body.projectid, {
-    $set: { Title: req.body.Title },
+    $set: { Title: req.body.title },
+    $set: { Leader: req.body.leader },
+  })
+    .populate("Leader")
+    .then((result) => {
+      res.json({ project: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+router.put("/editprojectstatus", Loginlead, (req, res) => {
+  console.log(req.admin);
+
+  Project.findByIdAndUpdate(req.body.projectid, {
+    $set: { Status: req.body.status },
   })
     .populate("Leader")
     .then((result) => {

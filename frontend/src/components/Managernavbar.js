@@ -93,7 +93,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link>All Teams</Link>
+            <Link to="/manager/allteam">All Teams</Link>
           </li>
           {
             <Link

@@ -9,12 +9,23 @@ import Signupresource from "./components/screens/Signupresource";
 import ManagerLogin from "./components/screens/ManagerLogin";
 import Managernavbar from "./components/Managernavbar";
 import Leadnavbar from "./components/Leadnavbar";
+import Resourcenavbar from "./components/Resourcenavbar";
 import Aboutus from "./components/screens/Aboutus";
 import Landing from "./components/screens/Landing";
 import Footer from "./components/screens/Footer";
 import Navbarnormal from "./components/Navbarnormal";
 import Managerdashboard from "./components/screens/Managerdashboard";
 import Leaddashboard from "./components/screens/Leaddashboard";
+import Team from "./components/screens/Team";
+import Addteammembers from "./components/screens/Addteammembers";
+import Seeteammembers from "./components/screens/Seeteammembers";
+import Subtask from "./components/screens/Subtask";
+import Resourcedashboard from "./components/screens/Resourcedashboard";
+import Resourcesubtask from "./components/screens/Resourcesubtask";
+import Adminallteams from "./components/screens/Adminallteams";
+import Adminsubtask from "./components/screens/Adminsubtask";
+import Adminseemembers from "./components/screens/Adminseemembers";
+
 export const UserContext = createContext();
 
 const Routing = () => {
@@ -56,6 +67,38 @@ const Routing = () => {
       <Route exact path="/lead">
         <Leadnavbar></Leadnavbar>
         <Leaddashboard></Leaddashboard>
+      </Route>
+      <Route exact path="/lead/team">
+        <Leadnavbar></Leadnavbar>
+        <Team></Team>
+      </Route>
+      <Route exact path="/lead/addmembers">
+        <Leadnavbar></Leadnavbar>
+        <Addteammembers></Addteammembers>
+      </Route>
+      <Route exact path="/lead/allteammembers">
+        <Leadnavbar></Leadnavbar>
+        <Seeteammembers></Seeteammembers>
+      </Route>
+      <Route exact path="/lead/subtask">
+        <Leadnavbar></Leadnavbar>
+        <Subtask></Subtask>
+      </Route>
+      <Route exact path="/resource">
+        <Resourcenavbar></Resourcenavbar>
+        <Resourcedashboard></Resourcedashboard>
+      </Route>
+      <Route exact path="/manager/allteam">
+        <Managernavbar></Managernavbar>
+        <Adminallteams></Adminallteams>
+      </Route>
+      <Route exact path="/manager/subtask">
+        <Managernavbar></Managernavbar>
+        <Adminsubtask></Adminsubtask>
+      </Route>
+      <Route exact path="/manager/teammember">
+        <Managernavbar></Managernavbar>
+        <Adminseemembers></Adminseemembers>
       </Route>
     </Switch>
   );

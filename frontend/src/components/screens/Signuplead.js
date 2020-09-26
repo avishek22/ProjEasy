@@ -2,11 +2,86 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Signuplead = () => {
+const Signup = () => {
   const history = useHistory();
-
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(true);
+  const [show, setShow] = useState("password");
 
+  const [showca, setShowca] = useState("show");
+  const [showc, setShowc] = useState("password");
+  const [showcas, setShowcas] = useState("show");
+  const [ownid, setOwnid] = useState("");
+
+  let a = 0,
+    c = 0;
+
+  const postData = () => {
+    setLoading(false);
+    if (
+      !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        email
+      )
+    ) {
+      setLoading(true);
+      Swal.fire("Invalid E-mail", "Please enter a valid E-mail!", "warning");
+
+      return;
+    }
+    // if (password.length <= 8) {
+    //   Swal.fire(
+    //     "Password",
+    //     "Length of password should be greater than 8!",
+    //     "warning"
+    //   );
+    //   return;
+    // }
+    if (password.length < 8) {
+      setLoading(true);
+      Swal.fire(
+        "Password",
+        "Length of password should be greater than 8",
+        "warning"
+      );
+      return;
+    }
+    if (password !== confirmpassword) {
+      setLoading(true);
+      Swal.fire("Password", "Passwords does not match", "warning");
+      return;
+    }
+    fetch("http://localhost:4000/signuplead", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: username,
+        password,
+        email,
+      }),
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          if (data.error) {
+            setLoading(true);
+            Swal.fire("Error", `${data.error}`, "error");
+          } else {
+            setLoading(true);
+            Swal.fire("Added", `${data.message}`, "success");
+
+            history.push("/");
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
       {loading ? (
@@ -67,16 +142,19 @@ const Signuplead = () => {
       <div className="mycard">
         <div className="card auth-card input-field">
           <h2>Code Fellas</h2>
-          <p>Lead Signup</p>
-
+          <h6 style={{ color: "gray", paddingBottom: 10 }}>Lead Signup</h6>
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="Fullname"
             style={{
               border: "1px solid gray",
               borderRadius: 2,
 
               backgroundColor: "#F9F9F9",
+            }}
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
             }}
           ></input>
           <input
@@ -88,29 +166,164 @@ const Signuplead = () => {
 
               backgroundColor: "#F9F9F9",
             }}
-          ></input>
-
-          <input
-            type="password"
-            placeholder="Password"
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
-
-              backgroundColor: "#F9F9F9",
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
             }}
           ></input>
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            style={{
-              border: "1px solid gray",
-              borderRadius: 2,
+          <div style={{ display: "flex" }}>
+            <input
+              type={show}
+              placeholder="Password"
+              style={{
+                border: "1px solid gray",
+                borderRight: "none",
+                borderRadius: 2,
+                paddingLeft: "2%",
+                backgroundColor: "#F9F9F9",
+              }}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            ></input>
+            {password === "" ? (
+              <button
+                onClick={() => {
+                  c = c + 1;
+                  console.log(c);
+                  if (c % 2 === 0) {
+                    setShow("text");
+                    setShowca("hide");
+                  } else {
+                    setShow("password");
+                    setShowca("show");
+                    // c = c + 1;
+                  }
+                }}
+                style={{
+                  marginBottom: 8,
+                  backgroundColor: "#F9F9F9",
+                  borderRadius: 2,
+                  border: "1px solid gray",
+                  borderLeft: 0,
+                  color: "gray",
+                  fontSize: 10,
+                  cursor: "not-allowed",
+                }}
+                disabled
+              >
+                {showca}
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  c = c + 1;
+                  console.log(c);
+                  if (c % 2 === 0) {
+                    setShow("text");
+                    setShowca("hide");
+                  } else {
+                    setShow("password");
+                    setShowca("show");
+                    // c = c + 1;
+                  }
+                }}
+                style={{
+                  marginBottom: 8,
+                  backgroundColor: "#F9F9F9",
+                  borderRadius: 2,
+                  border: "1px solid gray",
+                  borderLeft: 0,
+                  color: "gray",
+                  fontSize: 10,
+                  cursor: "pointer",
+                }}
+              >
+                {showca}
+              </button>
+            )}
+          </div>
+          <div style={{ display: "flex" }}>
+            <input
+              type={showc}
+              placeholder="Confirm Password"
+              style={{
+                border: "1px solid gray",
+                borderRight: 0,
+                borderRadius: 2,
+                paddingLeft: "2%",
+                backgroundColor: "#F9F9F9",
+              }}
+              value={confirmpassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+            ></input>
+            {confirmpassword === "" ? (
+              <button
+                onClick={() => {
+                  a = a + 1;
+                  console.log(a);
+                  if (a % 2 === 0) {
+                    setShowc("text");
+                    setShowcas("hide");
+                    a = a + 1;
+                  } else {
+                    setShowc("password");
+                    setShowcas("show");
+                    // c = c + 1;
+                  }
+                }}
+                style={{
+                  marginBottom: 8,
+                  backgroundColor: "#F9F9F9",
+                  border: "1px solid gray",
+                  borderLeft: 0,
+                  borderRadius: 2,
+                  color: "gray",
+                  fontSize: 10,
+                  cursor: "not-allowed",
+                }}
+                disabled
+              >
+                {showcas}
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  a = a + 1;
+                  console.log(a);
+                  if (a % 2 === 0) {
+                    setShowc("text");
+                    setShowcas("hide");
+                    a = a + 1;
+                  } else {
+                    setShowc("password");
+                    setShowcas("show");
+                    // c = c + 1;
+                  }
+                }}
+                style={{
+                  marginBottom: 8,
+                  backgroundColor: "#F9F9F9",
+                  border: "1px solid gray",
+                  borderLeft: 0,
+                  borderRadius: 2,
+                  color: "gray",
+                  fontSize: 10,
+                  cursor: "pointer",
+                }}
+              >
+                {showcas}
+              </button>
+            )}
+          </div>
 
-              backgroundColor: "#F9F9F9",
-            }}
-          ></input>
-          <button className="btn waves-effect waves-light btn-block login ">
+          <button
+            className="btn waves-effect waves-light btn-block login "
+            onClick={() => postData()}
+          >
             Signup
           </button>
           <p style={{ color: "gray" }}>
@@ -131,4 +344,4 @@ const Signuplead = () => {
   );
 };
 
-export default Signuplead;
+export default Signup;

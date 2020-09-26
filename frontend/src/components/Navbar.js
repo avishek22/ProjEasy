@@ -17,6 +17,8 @@ const Navbar = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remail, setREmail] = useState("");
+  const [rpassword, setRPassword] = useState("");
 
   const [show, handleShow] = useState("transparent");
   useEffect(() => {
@@ -58,6 +60,38 @@ const Navbar = () => {
             localStorage.setItem("name", data.Lead.name);
             // console.log(state.email);
             history.push("/lead");
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const postDataresource = () => {
+    fetch("http://localhost:4000/loginresource", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: rpassword,
+        email: remail,
+      }),
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          if (data.error) {
+            Swal.fire("Error", `${data.error}`, "error");
+          } else {
+            localStorage.setItem("jwt", data.token);
+            localStorage.setItem("user", JSON.stringify(data.Resource));
+            localStorage.setItem("email", JSON.stringify(data.Resource.email));
+            dispatch({ type: "USER", payload: data.Resource });
+            localStorage.setItem("_id", data.Resource._id);
+            localStorage.setItem("name", data.Resource.name);
+            // console.log(state.email);
+            history.push("/resource");
           }
         });
       })
@@ -169,6 +203,11 @@ const Navbar = () => {
 
               backgroundColor: "#F9F9F9",
             }}
+            value={remail}
+            onChange={(e) => {
+              setREmail(e.target.value);
+              console.log(e.target.value);
+            }}
           ></input>
           <input
             type="password"
@@ -179,10 +218,18 @@ const Navbar = () => {
 
               backgroundColor: "#F9F9F9",
             }}
+            value={rpassword}
+            onChange={(e) => {
+              setRPassword(e.target.value);
+              console.log(e.target.value);
+            }}
           ></input>
           <button
             style={{ marginBottom: 10 }}
             className="btn waves-effect waves-light btn-block login "
+            onClick={() => {
+              postDataresource();
+            }}
           >
             Login
           </button>
