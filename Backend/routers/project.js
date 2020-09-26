@@ -71,6 +71,22 @@ router.put("/editprojectstatus", Loginlead, (req, res) => {
     });
 });
 
+router.put("/editsubtaskstatus", (req, res) => {
+  console.log(req.admin);
+
+  Project.findOneAndUpdate(
+    { "Subtask._id": req.body.projectid },
+    { $set: { Status: req.body.status } }
+  )
+    .populate("Leader")
+    .then((result) => {
+      res.json({ project: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 router.delete("/deleteproject", Loginadmin, (req, res) => {
   Project.findOne({ _id: req.body.projectid })
     .populate("Leader")
