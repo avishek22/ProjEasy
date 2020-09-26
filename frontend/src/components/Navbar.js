@@ -116,9 +116,9 @@ const Navbar = () => {
           <li>
             <Link to="/aboutus">About Us</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/contact">Contact Us</Link>
-          </li>
+          </li> */}
           <li>
             <Link
               className="waves-effect waves-light  modal-trigger"
