@@ -15,8 +15,10 @@ const Home = () => {
   const history = useHistory();
   const [showsub, setShowsub] = useState([]);
   const newsubtask = useRef();
+  const [status, setStatus] = useState("");
+  const statuschange = useRef();
   useEffect(() => {
-    // materialize.Modal.init(newsubtask.current);
+    materialize.Modal.init(statuschange.current);
     fetch("http://localhost:4000/mysubtask", {
       method: "post",
       headers: {
@@ -40,6 +42,37 @@ const Home = () => {
         console.log(e);
       });
   }, []);
+
+  const editmainStatus = () => {
+    console.log(team);
+    fetch("http://localhost:4000/editsubtaskstatus", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+
+      body: JSON.stringify({
+        status: status,
+        projectid: localStorage.getItem("editsubtaskid"),
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        if (result.error) {
+          return Swal.fire("Error!", result.error, "error");
+        }
+        Swal.fire("Posted!", "Subtask Posted", "success");
+        // setLoading(true);
+        // localStorage.setItem("newteam", result.team._id);
+        // localStorage.setItem("newteamname", result.team.teamname);
+        // window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   return (
     <div>
@@ -112,6 +145,17 @@ const Home = () => {
                 top: 0,
               }}
             >
+              <i
+                className="material-icons  modal-trigger"
+                data-target="modal11"
+                style={{ margin: "5%", cursor: "pointer" }}
+                onClick={() => {
+                  localStorage.setItem("editsubtaskid", item._id);
+                }}
+                style={{ float: "right" }}
+              >
+                edit
+              </i>
               {item.Subtask.map((option) => (
                 <Link
                   style={{
@@ -119,6 +163,11 @@ const Home = () => {
                     flexDirection: "column",
                     flexWrap: "wrap",
                     margin: "0%",
+                  }}
+                  className="modal-trigger"
+                  data-target="modal11"
+                  onClick={() => {
+                    localStorage.setItem("editsubtaskid", option._id);
                   }}
                   key={option._id}
                 >
@@ -154,6 +203,35 @@ const Home = () => {
         })}
       </div>
       ;
+      <div id="modal11" className="modal profile " ref={statuschange}>
+        <div className="modal-content" style={{ padding: "10% 30%" }}>
+          {" "}
+          <input
+            type="text"
+            placeholder="Status"
+            style={{
+              border: "1px solid gray",
+              borderRadius: 2,
+
+              backgroundColor: "#F9F9F9",
+            }}
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              console.log(e.target.value);
+            }}
+          ></input>
+          <button
+            style={{ marginBottom: 10 }}
+            className="btn waves-effect waves-light btn-block login "
+            onClick={() => {
+              editmainStatus();
+            }}
+          >
+            Post
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

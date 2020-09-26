@@ -88,6 +88,10 @@ const Routing = () => {
         <Resourcenavbar></Resourcenavbar>
         <Resourcedashboard></Resourcedashboard>
       </Route>
+      <Route exact path="/resource/subtask">
+        <Resourcenavbar></Resourcenavbar>
+        <Resourcesubtask></Resourcesubtask>
+      </Route>
       <Route exact path="/manager/allteam">
         <Managernavbar></Managernavbar>
         <Adminallteams></Adminallteams>

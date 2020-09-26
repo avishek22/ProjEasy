@@ -11,6 +11,7 @@ const Loginadmin = require("../middleware/Loginadmin");
 const loginlead = require("../middleware/Loginlead");
 const loginresource = require("../middleware/Loginresource");
 const Loginlead = require("../middleware/Loginlead");
+const Loginresource = require("../middleware/Loginresource");
 
 router.post("/newproject", Loginadmin, (req, res) => {
   const { Title, Leader } = req.body;
@@ -71,7 +72,7 @@ router.put("/editprojectstatus", Loginlead, (req, res) => {
     });
 });
 
-router.put("/editsubtaskstatus", (req, res) => {
+router.put("/editsubtaskstatus", Loginresource, (req, res) => {
   console.log(req.admin);
 
   Project.findOneAndUpdate(
