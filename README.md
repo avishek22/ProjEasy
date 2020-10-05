@@ -1,1 +1,1 @@
-# Code-Fellas
+# ProjEasy
