@@ -184,7 +184,7 @@ const Home = () => {
         <div className="modal-content" style={{ padding: "10% 30%" }}>
           <h4 style={{ textAlign: "center", color: "black" }}>Add Member</h4>
 
-          <label>Member</label>
+          <label>Status</label>
           <select
             style={{
               border: "1px solid gray",

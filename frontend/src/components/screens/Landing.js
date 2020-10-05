@@ -21,16 +21,14 @@ const Landing = () => {
       <Span letter="T"></Span>
       <Span letter="o"></Span>
       <br></br>
-      <Span letter="C"></Span>
+      <Span letter="P"></Span>
+      <Span letter="r"></Span>
       <Span letter="o"></Span>
-      <Span letter="d"></Span>
-      <Span letter="e"></Span>
-      <Span letter="F"></Span>
-      <Span letter="e"></Span>
-      <Span letter="l"></Span>
-      <Span letter="l"></Span>
+      <Span letter="j"></Span>
+      <Span letter="E"></Span>
       <Span letter="a"></Span>
       <Span letter="s"></Span>
+      <Span letter="y"></Span>
     </section>
   );
 };
